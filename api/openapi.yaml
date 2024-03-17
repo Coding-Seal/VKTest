@@ -1,0 +1,123 @@
+openapi: 3.0.0
+info:
+  title: Задания для пользователя
+  version: 1.0.0
+paths:
+  /user/create:
+    post:
+      summary: Создание пользователя
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: Имя пользователя
+      responses:
+        '201':
+          description: Пользователь успешно создан
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    format: uuid
+                    description: Уникальный идентификатор пользователя
+  /quest/create:
+    post:
+      summary: Создание задания
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                  description: Название задания
+                description:
+                  type: string
+                  description: Описание задания
+                reward:
+                  type: integer
+                  description: Награда за выполнение задания
+      responses:
+        '201':
+          description: Задание успешно создано
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    format: uuid
+                    description: Уникальный идентификатор задания
+  /quest/{quest_id}/complete:
+    post:
+      summary: Пометить задание как выполненное
+      parameters:
+        - in: path
+          name: quest_id
+          required: true
+          schema:
+            type: string
+            format: uuid
+            description: Уникальный идентификатор задания
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user_id:
+                  type: string
+                  format: uuid
+                  description: Уникальный идентификатор пользователя
+      responses:
+        '200':
+          description: Задание успешно помечено как выполненное
+  /user/{user_id}/history:
+    get:
+      summary: Получить историю выполненных заданий и баланс пользователя
+      parameters:
+        - in: path
+          name: user_id
+          required: true
+          schema:
+            type: string
+            format: uuid
+            description: Уникальный идентификатор пользователя
+      responses:
+        '200':
+          description: История выполненных заданий и баланс пользователя
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  quests:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          format: uuid
+                          description: Уникальный идентификатор задания
+                        title:
+                          type: string
+                          description: Название задания
+                        reward:
+                          type: integer
+                          description: Награда за выполнение задания
+                  balance:
+                    type: integer
+                    description: Текущий баланс пользователя
